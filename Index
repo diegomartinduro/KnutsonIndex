@@ -1,4 +1,5 @@
 #This code computes the Knutson Index of all irreducible characters of given group G.
+#Sonata package is required
 
 from sage.modules.free_module_integer import IntegerLattice
 

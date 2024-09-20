@@ -1,0 +1,51 @@
+#This code computes the Knutson Index of all irreducible characters of given group G.
+
+from sage.modules.free_module_integer import IntegerLattice
+
+G = gap.SmallGroup(72,22) #Change group if needed
+G = PermutationGroup(gap_group = G.AsPermGroup()) #Remove if group is already a permutation group
+C = G.conjugacy_classes()
+c = len(C)
+N = G.character_table()
+
+def chi(k):
+    return matrix(G.irreducible_characters()[k].values())
+
+r = zero_vector(ZZ, len(C))
+for i in IntegerRange(c):
+    r[i] = chi(i)[0,0]
+print('Dimension of irreducible characters:', r) #Dimension of irreducible characters
+
+def inn(a,b): #Computes inner product of two characters
+    wo = 0
+    wn = 0
+    for l in IntegerRange(c):
+        wn = wo + (len(C[l]) * a[0,l] * b[0,l].conjugate())
+        wo = wn
+    return round(abs(wn * (1/order(G))))
+
+def ten(a,b): #Computes tensor product of two characters
+    u = zero_matrix(CC,1,c)
+    for k in IntegerRange(c):
+        u[0,k] = a[0,k] * b[0,k]
+    return u
+
+def m(k): #Computes Knutson index of an irreducible character
+    M = zero_matrix(ZZ, c)
+    if N[k,0]==1:
+        return 'Knutson Index 1' #Skip linear characters
+    else:
+        for i in IntegerRange(c):
+            for j in IntegerRange(c):
+                M[i,j] = inn(chi(j),ten(chi(i),chi(k)))
+        if r in IntegerLattice(M):
+            return 'Knutson Index 1'
+        elif 2*r in IntegerLattice(M):
+            return 'Knutson Index 2'
+        elif 3*r in IntegerLattice(M):
+            return 'Knutson Index 3' #Add more lines here if needed
+        else:
+            return 'Knutson Index >3'
+
+for k in IntegerRange(c):
+    print(m(k))

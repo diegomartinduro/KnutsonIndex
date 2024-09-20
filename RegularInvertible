@@ -1,4 +1,5 @@
 #This code checks which irreducible characters of a group G are regular invertible
+#Sonata package is required
 
 from sage.modules.free_module_integer import IntegerLattice
 

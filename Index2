@@ -1,6 +1,5 @@
 #This code checks Knutson's Conjecture for all groups a given order
-
-('LoadPackage("sonata")')
+#Sonata package is required
 
 for m in IntegerRange(1,51):
     print('')

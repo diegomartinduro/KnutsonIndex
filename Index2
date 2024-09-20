@@ -1,0 +1,44 @@
+#This code checks Knutson's Conjecture for all groups a given order
+
+('LoadPackage("sonata")')
+
+for m in IntegerRange(1,51):
+    print('')
+    print('New Group')
+    G = gap.SmallGroup(72,m)
+    G = PermutationGroup(gap_group = G.AsPermGroup())
+    C = G.conjugacy_classes()
+    c = len(C)
+    N = G.character_table()
+
+    def chi(k):
+        return matrix(G.irreducible_characters()[k].values())
+
+    r = zero_matrix(ZZ, 1, len(C))
+    for i in IntegerRange(c):
+        r[0,i] = chi(i)[0,0]
+
+    def inn(a,b):
+        wo = 0
+        wn = 0
+        for l in IntegerRange(c):
+            wn = wo + (len(C[l]) * a[0,l] * b[0,l].conjugate())
+            wo = wn
+        return round(abs(wn * (1/G.order())))
+
+    def ten(a,b):
+        u = zero_matrix(CC,1,c)
+        for k in IntegerRange(c):
+            u[0,k] = a[0,k] * b[0,k]
+        return u
+
+    def m(k):
+        M = zero_matrix(ZZ, c)
+        if N[k,0]==1:
+            return 'trivial'
+        else:
+            for i in IntegerRange(c):
+                for j in IntegerRange(c):
+                    M[i,j] = inn(chi(j),ten(chi(i),chi(k)))
+            X = M.solve_left(r)
+            return X

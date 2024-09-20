@@ -1,5 +1,5 @@
-#This code computes the Knutson Index of all irreducible characters of given group G.
-
+#This code starts an infinite loop that computes the Knutson Index of all groups in increasing order.
+#Sonata package is required
 
 from sage.modules.free_module_integer import IntegerLattice
 

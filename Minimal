@@ -1,0 +1,38 @@
+#Takes as an input a group G and its kth irreducible character
+
+G = gap.SmallGroup(72,22) #Change group if needed
+k = 14 #Change irreducible character if needed
+
+G = PermutationGroup(gap_group = G.AsPermGroup()) #Remove if group already a permutation group
+N = G.character_table()
+C = G.conjugacy_classes()
+c = len(C)
+d = round(N[k-1,0]) #Dimension of the kth irreducible character
+
+x_string = ', '.join([f'x{i}' for i in range(1, c+1)]) #Creates variables
+X = var(x_string)
+
+
+zeros = [] #Zeros of the kth irreducible character
+for l in range(0,c):
+    if N[k-1,l] == 0:
+        zeros.append(l)
+
+S = 0
+for n in range(0,c):
+    S = S + X[n]*N[n,0]
+
+Eq = []
+for z in zeros:
+    E = 0
+    for n in range(0,c):
+        E = E + X[n]*N[n,z]
+    Eq.append(E)
+
+for D in range(1,d):
+    System = [S==D]
+    for eq in Eq:
+        System.append(eq == 0)
+    #print(System)
+    solve(System, X)
+    print("")
